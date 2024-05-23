@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client"
 import Resend from "@auth/sveltekit/providers/resend"
 import github from "@auth/sveltekit/providers/github"
 import kakao from "@auth/sveltekit/providers/kakao"
+import facebook from "@auth/sveltekit/providers/facebook"
 
 const prisma = new PrismaClient()
 
@@ -13,11 +14,13 @@ const providers =  [
     from: "admin@diving.run",
   }),
   github,
-  kakao
+  kakao,
+  facebook
 ]
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: PrismaAdapter(prisma),
   providers,
+  trustHost: true,
   theme: {
     logo: "./logo.png"
   }
