@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from "svelte";
     import { page } from "$app/stores";
     import HamburgerIcon from "./HamburgerIcon.svelte";
     import { signOut, signIn } from "@auth/sveltekit/client";
@@ -32,7 +31,17 @@
     }
 
     function scroll() {
-        scrollY <= scrollY_copy ? (nav_active = true) : (nav_active = false);
+        if(scrollY === 0) {
+            nav_active = true
+            return
+        }
+
+        if(scrollY >= scrollY_copy) {
+            nav_active = false
+        } else {
+            nav_active = true
+        }
+
         scrollY_copy = scrollY;
     }
 
@@ -43,14 +52,9 @@
             submenu_active = i;
         }
     }
-
-    onMount(() => {
-        toggleNav();
-    });
 </script>
-
 <svelte:window bind:scrollY on:scroll={scroll} />
-
+{scrollY === 0 && nav_active == false ? toggleNav() : ""}
 <div class="relative">
     <div class="fixed w-full min-h-fit duration-1000 z-10 nav" class:nav_active>
         <div
@@ -134,7 +138,7 @@
                         </button>
                         <button
                             class="block w-full px-4 py-3 mb-3 text-xs text-center text-white font-semibold bg-blue-500 hover:bg-blue-700 rounded-xl"
-                            on:click={() => signOut()}
+                            on:click={signOut}
                         >
                             Sign Out
                         </button>
@@ -163,8 +167,6 @@
         class:overay_active
     ></div>
 </div>
-
-<!-- <div class="h-[25px]"></div> -->
 <style>
     .submenu_active {
         display: block;
